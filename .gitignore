@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+
+# Project specific
+videos/*
+!videos/.gitkeep
+transcripts/*
+!transcripts/.gitkeep
+index/*
+!index/.gitkeep
+debug/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
