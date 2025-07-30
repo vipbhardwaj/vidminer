@@ -5,13 +5,16 @@ interface ApiResponse<T> {
   error?: string;
 }
 
+// Backend API URL - replace with your deployed backend URL
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+
 // Generic fetch wrapper with error handling
 async function fetchApi<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(`${BACKEND_URL}${endpoint}`, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
@@ -31,6 +34,23 @@ async function fetchApi<T>(
       error: error instanceof Error ? error.message : 'An unknown error occurred',
     };
   }
+}
+
+// Search result type
+export interface SearchResult {
+  video: string;
+  start: number;
+  end: number;
+  text: string;
+  score: number;
+}
+
+// Search API function
+export async function searchTranscripts(query: string): Promise<ApiResponse<SearchResult[]>> {
+  return fetchApi<SearchResult[]>('/search', {
+    method: 'POST',
+    body: JSON.stringify({ query }),
+  });
 }
 
 // Dashboard data types
