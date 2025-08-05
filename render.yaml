@@ -3,7 +3,7 @@ services:
   - type: web
     name: vidminer-frontend
     env: node
-    plan: starter
+    plan: free
     buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && npm start
     envVars:
@@ -18,7 +18,7 @@ services:
   - type: web
     name: vidminer-backend
     env: python
-    plan: starter
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: python run.py server
     envVars:
