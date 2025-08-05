@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server';
-import { getVideosInfo, getVideoStats } from '@/utils/videoUtils';
 
 // GET handler for dashboard data
 export async function GET() {
   try {
-    const videos = getVideosInfo();
-    const stats = getVideoStats();
+    // Mock data for now - in production this would come from the backend
+    const videos = [
+      {
+        id: '1',
+        title: 'Sample Video',
+        size: 1024000,
+        uploadedAt: new Date().toISOString(),
+        status: 'completed' as const,
+      }
+    ];
+
+    const stats = {
+      totalVideos: videos.length,
+      totalDuration: 0,
+      processingVideos: 0,
+      completedVideos: videos.length,
+    };
 
     const mockSearches = [
       {
