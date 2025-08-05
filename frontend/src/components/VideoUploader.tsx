@@ -14,7 +14,7 @@ interface UploadingFile {
 export default function VideoUploader() {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
 
-  // Mock upload function - replace with actual API call
+  // Real upload function using API
   const uploadFile = async (file: File): Promise<void> => {
     const fileId = Math.random().toString(36).substring(7);
     
@@ -27,32 +27,36 @@ export default function VideoUploader() {
     }]);
 
     try {
-      // Simulate upload progress
-      for (let progress = 0; progress <= 100; progress += 10) {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        setUploadingFiles(prev => prev.map(f => 
-          f.id === fileId ? { ...f, progress } : f
-        ));
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Upload file to API
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
       }
 
-      // Simulate processing
-      setUploadingFiles(prev => prev.map(f => 
-        f.id === fileId ? { ...f, status: 'processing' } : f
-      ));
+      const result = await response.json();
 
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Mark as completed
-      setUploadingFiles(prev => prev.map(f => 
-        f.id === fileId ? { ...f, status: 'completed' } : f
-      ));
+      if (result.success) {
+        // Mark as completed
+        setUploadingFiles(prev => prev.map(f => 
+          f.id === fileId ? { ...f, status: 'completed', progress: 100 } : f
+        ));
+      } else {
+        throw new Error(result.error || 'Upload failed');
+      }
     } catch (error) {
       setUploadingFiles(prev => prev.map(f => 
         f.id === fileId ? { 
           ...f, 
           status: 'error',
-          error: 'Failed to upload file'
+          error: error instanceof Error ? error.message : 'Failed to upload file'
         } : f
       ));
     }

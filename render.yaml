@@ -1,0 +1,36 @@
+services:
+  # Frontend Next.js Service
+  - type: web
+    name: vidminer-frontend
+    env: node
+    plan: starter
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://vidminer-backend.onrender.com
+    healthCheckPath: /
+    autoDeploy: true
+
+  # Backend Python Service
+  - type: web
+    name: vidminer-backend
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python run.py server
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - key: OPENAI_API_KEY
+        sync: false  # Set this in Render dashboard
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # Redis for caching and session storage
+  - type: redis
+    name: vidminer-redis
+    plan: starter
+    maxmemoryPolicy: allkeys-lru 

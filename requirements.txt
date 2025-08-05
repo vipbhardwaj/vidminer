@@ -3,6 +3,8 @@ charset-normalizer==3.4.2
 faiss-cpu==1.11.0
 ffmpeg-python==0.2.0
 filelock==3.18.0
+flask==3.0.0
+flask-cors==4.0.0
 fsspec==2025.5.1
 future==1.0.0
 hf-xet==1.1.5
@@ -40,3 +42,4 @@ fastapi==0.110.0
 uvicorn==0.27.1
 python-multipart==0.0.9
 pydantic==2.6.3
+werkzeug==3.0.1

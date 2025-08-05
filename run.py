@@ -4,7 +4,7 @@ import sys
 import time
 
 if len(sys.argv) < 2:
-    print("Usage: python run.py [transcribe|embed|query]")
+    print("Usage: python run.py [transcribe|embed|query|server]")
     sys.exit(1)
 
 cmd = sys.argv[1]
@@ -36,5 +36,11 @@ elif cmd == "query":
         except KeyboardInterrupt:
             print("\n👋 Exiting.")
             break
+elif cmd == "server":
+    print("🚀 Starting VidMiner backend server...")
+    from server import app
+    import os
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
 else:
     print(f"❌ Unknown command: {cmd}")

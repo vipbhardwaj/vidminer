@@ -5,8 +5,8 @@ interface ApiResponse<T> {
   error?: string;
 }
 
-// Backend API URL - replace with your deployed backend URL
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
+// Get API base URL from environment or default to localhost
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // Generic fetch wrapper with error handling
 async function fetchApi<T>(
@@ -14,7 +14,12 @@ async function fetchApi<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   try {
-    const response = await fetch(`${BACKEND_URL}${endpoint}`, {
+    // If endpoint starts with /api, use the backend API
+    const url = endpoint.startsWith('/api') 
+      ? `${API_BASE_URL}${endpoint}`
+      : endpoint;
+      
+    const response = await fetch(url, {
       ...options,
       headers: {
         'Content-Type': 'application/json',
