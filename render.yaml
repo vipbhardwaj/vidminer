@@ -33,4 +33,5 @@ services:
   - type: redis
     name: vidminer-redis
     plan: starter
-    maxmemoryPolicy: allkeys-lru 
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []  # Allow all IPs (empty array means no restrictions) 
