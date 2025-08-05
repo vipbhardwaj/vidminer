@@ -23,7 +23,7 @@ services:
     startCommand: python run.py server
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11
+        value: 3.11.0
       - key: OPENAI_API_KEY
         sync: false  # Set this in Render dashboard
     healthCheckPath: /health
