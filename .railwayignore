@@ -1,0 +1,13 @@
+_frontend_temp/
+frontend/
+node_modules/
+*.bak
+.vercel/
+.git/
+debug/
+videos/*.mp4
+transcripts/*.json
+index/*.faiss
+index/*.pkl
+venv/
+*.zip
