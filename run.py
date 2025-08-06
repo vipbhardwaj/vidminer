@@ -38,7 +38,7 @@ elif cmd == "query":
             break
 elif cmd == "server":
     print("🚀 Starting VidMiner backend server...")
-    from server import app
+    from src.app import app
     import os
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
