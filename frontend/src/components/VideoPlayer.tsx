@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface VideoPlayerProps {
   videoId: string;
@@ -15,7 +14,7 @@ export default function VideoPlayer({ videoId, videoTitle, onClose }: VideoPlaye
   const [isPlaying, setIsPlaying] = useState(false);
   const [transcription, setTranscription] = useState<Array<{time: number, text: string}>>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<{ time: number; text: string }[]>([]);
 
   // Mock transcription data - replace with actual API call
   useEffect(() => {

@@ -55,11 +55,11 @@ export default function LibraryInterface() {
 
   const { recentVideos } = dashboardData;
 
-  const handlePlayVideo = (video: any) => {
+  const handlePlayVideo = (video: { id: string; title: string }) => {
     setSelectedVideo({ id: video.id, title: video.title });
   };
 
-  const handleSearchVideo = (video: any) => {
+  const handleSearchVideo = (video: { id: string; title: string }) => {
     // Navigate to search page with video pre-selected
     router.push(`/search?video=${encodeURIComponent(video.title)}`);
   };
