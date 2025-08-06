@@ -1,29 +1,27 @@
-# Use Python 3.11 slim image
-FROM python:3.11-slim
+# Use Python 3.11 alpine for smaller base image
+FROM python:3.11-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies (alpine packages are much smaller)
+RUN apk add --no-cache \
     ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+    gcc \
+    g++ \
+    musl-dev \
+    linux-headers \
+    libffi-dev
 
-# Copy requirements and install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy requirements and install only essential dependencies
+COPY requirements-minimal.txt ./requirements.txt
+RUN pip install --no-cache-dir --no-deps -r requirements.txt
 
-# Copy source code
+# Copy only source code (no videos/transcripts/index to reduce size)
 COPY src/ ./src/
-COPY videos/ ./videos/
-COPY transcripts/ ./transcripts/
-COPY index/ ./index/
 
 # Create necessary directories
 RUN mkdir -p videos transcripts index
-
-# Set permissions
-RUN chmod -R 755 /app
 
 # Expose port
 EXPOSE 8000
