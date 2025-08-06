@@ -99,9 +99,12 @@ ehthumbs.db
 Thumbs.db
 
 # ===== DEPLOYMENT =====
-# Render specific
-.render-buildlogs/
-.render-deploy-logs/
+# Deployment specific
+.vercel
+.railway
+railway.json
+.env.local
+.env.production
 
 # ===== SECURITY =====
 # API keys and secrets

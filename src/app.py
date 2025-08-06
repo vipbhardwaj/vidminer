@@ -18,7 +18,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",  # Local development
-        "https://your-frontend-domain.vercel.app",  # Update this with your frontend domain
+        "https://*.vercel.app",  # Vercel deployments
+        "https://vidminer.vercel.app",  # Production domain (update this)
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -55,5 +56,5 @@ app_wsgi = app
 # Only run uvicorn in development
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 5000))
+    port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)

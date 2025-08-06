@@ -1,197 +1,211 @@
-# VidMiner Deployment Guide for Render.com
+# VidMiner Deployment Guide
 
-This guide will help you deploy your VidMiner application to Render.com with both the Next.js frontend and Python backend.
+Deploy your VidMiner application with Frontend on Vercel and Backend on Railway (both free tiers).
 
-## 🚀 Quick Start
+## 🚀 Architecture
 
-### 1. Prepare Your Repository
+- **Frontend**: Next.js → Vercel (Free)
+- **Backend**: FastAPI + ML Models → Railway (Free)
 
-Make sure your repository has the following structure:
-```
-vidminer/
-├── frontend/          # Next.js frontend
-├── src/              # Python backend source
-├── videos/           # Video storage directory
-├── processed/        # Processed data storage
-├── requirements.txt  # Python dependencies
-├── server.py         # Flask server
-├── render.yaml       # Render configuration
-├── Dockerfile        # Backend container
-└── DEPLOYMENT.md     # This file
-```
+## 📋 Prerequisites
 
-### 2. Deploy to Render.com
+1. GitHub repository with your code
+2. [Vercel CLI](https://vercel.com/cli) installed: `npm i -g vercel`
+3. [Railway CLI](https://docs.railway.app/develop/cli) installed: `npm i -g @railway/cli`
+4. Vercel and Railway accounts (both free, no credit card required)
 
-#### Option A: Using render.yaml (Recommended)
+## 🔧 Backend Deployment (Railway)
 
-1. **Connect your GitHub repository** to Render.com
-2. **Create a new Blueprint** in Render dashboard
-3. **Upload your render.yaml** file or paste its contents
-4. **Deploy automatically** - Render will create all services
+### 1. Setup Railway
 
-#### Option B: Manual Deployment
+```bash
+# Login to Railway
+railway login
 
-**Backend Service:**
-1. Create a new **Web Service**
-2. Connect your GitHub repository
-3. Configure:
-   - **Name**: `vidminer-backend`
-   - **Environment**: `Python`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `python server.py`
-   - **Health Check Path**: `/health`
+# Link to your project (from project root)
+railway link
 
-**Frontend Service:**
-1. Create another **Web Service**
-2. Configure:
-   - **Name**: `vidminer-frontend`
-   - **Environment**: `Node`
-   - **Build Command**: `cd frontend && npm install && npm run build`
-   - **Start Command**: `cd frontend && npm start`
-   - **Health Check Path**: `/`
-
-### 3. Environment Variables
-
-Set these in your Render dashboard:
-
-**Backend Environment Variables:**
-```
-PYTHON_VERSION=3.11
-OPENAI_API_KEY=your_openai_api_key_here
+# Or create a new project
+railway init
 ```
 
-**Frontend Environment Variables:**
-```
-NODE_ENV=production
-NEXT_PUBLIC_API_URL=https://your-backend-service.onrender.com
-```
+### 2. Deploy Backend
 
-### 4. Storage Configuration
+```bash
+# Deploy to Railway
+railway up
 
-#### For Video Storage:
-- **Local Storage**: Videos are stored in the `/videos` directory
-- **Persistent Storage**: Consider using Render's persistent disk for production
-- **External Storage**: For production, consider using AWS S3 or similar
+# Check deployment status
+railway status
 
-#### For Processed Data:
-- **Transcriptions**: Stored in `/processed/transcriptions/`
-- **Embeddings**: Stored in `/processed/embeddings/`
-- **Indices**: Stored in `/processed/indices/`
-
-## 🔧 Configuration Details
-
-### Backend API Endpoints
-
-Your Flask server provides these endpoints:
-
-- `GET /health` - Health check
-- `GET /api/videos` - List all videos
-- `GET /api/videos/<video_id>` - Serve video file
-- `POST /api/upload` - Upload new video
-- `POST /api/transcribe/<video_id>` - Transcribe video
-- `POST /api/embed/<video_id>` - Create embeddings
-- `POST /api/search` - Search videos
-- `GET /api/dashboard` - Dashboard data
-
-### Frontend Configuration
-
-The frontend automatically detects the backend URL:
-- **Development**: Uses `http://localhost:5000`
-- **Production**: Uses `NEXT_PUBLIC_API_URL` environment variable
-
-## 📁 Directory Structure
-
-```
-vidminer/
-├── frontend/                 # Next.js frontend
-│   ├── src/
-│   │   ├── app/             # Next.js app router
-│   │   ├── components/      # React components
-│   │   └── utils/           # Utility functions
-│   ├── package.json
-│   └── next.config.js
-├── src/                     # Python backend
-│   ├── transcribe.py        # Video transcription
-│   ├── embed.py            # Embedding generation
-│   ├── query.py            # Search functionality
-│   └── utils.py            # Utility functions
-├── videos/                  # Video storage
-├── processed/               # Processed data
-│   ├── transcriptions/      # Video transcriptions
-│   ├── embeddings/          # Video embeddings
-│   └── indices/            # Search indices
-├── server.py               # Flask server
-├── requirements.txt         # Python dependencies
-├── render.yaml             # Render configuration
-└── Dockerfile              # Backend container
+# View logs
+railway logs
 ```
 
-## 🔍 Monitoring and Logs
+Your backend will be available at: `https://your-app-name.up.railway.app`
 
-### Health Checks
-- **Backend**: `https://your-backend.onrender.com/health`
-- **Frontend**: `https://your-frontend.onrender.com/`
+### 3. Test Backend
 
-### Logs
-Access logs in Render dashboard:
-1. Go to your service
-2. Click on "Logs" tab
-3. Monitor application logs and errors
+```bash
+curl https://your-app-name.up.railway.app/
+```
 
-## 🚨 Troubleshooting
+## 🎨 Frontend Deployment (Vercel)
 
-### Common Issues:
+### 1. Setup Environment Variables
 
-1. **Backend not starting:**
-   - Check if all dependencies are installed
-   - Verify Python version (3.11)
-   - Check logs for import errors
+In your Vercel dashboard or using CLI, set:
 
-2. **Frontend can't connect to backend:**
-   - Verify `NEXT_PUBLIC_API_URL` is set correctly
-   - Check CORS configuration
-   - Ensure backend is running
+```bash
+# Set backend URL
+vercel env add NEXT_PUBLIC_BACKEND_URL production
+# Enter: https://your-app-name.up.railway.app
+```
 
-3. **Video uploads failing:**
-   - Check disk space
-   - Verify file permissions
-   - Check video format support
+### 2. Deploy Frontend
 
-4. **Transcription not working:**
-   - Verify OpenAI API key is set
-   - Check if ffmpeg is installed
-   - Monitor memory usage
+```bash
+# Navigate to frontend directory
+cd frontend
 
-### Performance Tips:
+# Deploy to Vercel
+vercel --prod
 
-1. **Use persistent disk** for video storage
-2. **Implement video compression** for large files
-3. **Add caching** for frequently accessed data
-4. **Monitor resource usage** in Render dashboard
+# Or deploy from root
+vercel frontend --prod
+```
 
-## 🔐 Security Considerations
+Your frontend will be available at: `https://your-project.vercel.app`
 
-1. **API Keys**: Store sensitive keys as environment variables
-2. **File Uploads**: Validate file types and sizes
-3. **CORS**: Configure CORS properly for production
-4. **Rate Limiting**: Consider adding rate limiting for API endpoints
+## 🔄 Update CORS (Important!)
 
-## 📈 Scaling
+After getting your Vercel domain, update the backend CORS settings:
 
-For production use:
-1. **Upgrade to paid plans** for better performance
-2. **Use persistent disk** for data storage
-3. **Implement caching** with Redis
-4. **Add CDN** for video delivery
-5. **Monitor usage** and scale accordingly
+1. Edit `src/app.py`:
+```python
+allow_origins=[
+    "http://localhost:3000",  # Local development
+    "https://*.vercel.app",  # Vercel deployments
+    "https://your-project.vercel.app",  # Your actual domain
+],
+```
 
-## 🎯 Next Steps
+2. Redeploy backend:
+```bash
+railway up
+```
 
-After deployment:
-1. **Test all functionality** - upload, transcribe, search
-2. **Monitor performance** - check logs and metrics
-3. **Set up monitoring** - alerts for errors
-4. **Configure backups** - for important data
-5. **Set up CI/CD** - for automatic deployments
+## 🧪 Testing the Full Stack
 
-Your VidMiner application should now be live and accessible on the internet! 🎉 
+1. **Test backend health**: `https://your-app-name.up.railway.app/`
+2. **Test frontend**: `https://your-project.vercel.app`
+3. **Test search functionality**: Upload a video and try searching
+
+## 📊 Free Tier Limitations
+
+### Railway (Backend)
+- **Compute**: 512MB RAM, 1 vCPU
+- **Storage**: 1GB persistent storage
+- **Bandwidth**: Unlimited
+- **Sleep**: Apps sleep after 30min inactivity, wake on request
+- **Build Time**: 500 hours/month
+
+### Vercel (Frontend)
+- **Bandwidth**: 100GB/month
+- **Function Execution**: 100GB-Hrs/month
+- **Builds**: Unlimited
+- **No sleep**: Always available
+
+## 🛠️ Local Development
+
+```bash
+# Start backend (from project root)
+cd src && python app.py
+
+# Start frontend (new terminal)
+cd frontend && npm run dev
+```
+
+## 🔍 Troubleshooting
+
+### Backend Issues
+```bash
+# Check logs
+railway logs
+
+# Connect to shell
+railway shell
+
+# Check resource usage
+railway status
+```
+
+### Frontend Issues
+```bash
+# Check build logs
+vercel logs
+
+# Local debug
+cd frontend && npm run build
+```
+
+### CORS Issues
+- Ensure your Vercel domain is added to CORS origins
+- Check browser developer tools for exact error messages
+
+## 📝 Environment Variables
+
+### Frontend (Vercel)
+- `NEXT_PUBLIC_BACKEND_URL`: Your Railway app URL
+
+### Backend (Railway)
+- Set in Railway dashboard or CLI
+- Add secrets: `railway variables set KEY=value`
+
+## 🚀 Automatic Deployments
+
+### GitHub Integration
+
+1. **Vercel**: Connects automatically when you deploy
+2. **Railway**: Set up GitHub Actions for auto-deploy:
+
+Create `.github/workflows/deploy.yml`:
+```yaml
+name: Deploy to Railway
+on: 
+  push:
+    branches: [main]
+    paths: ['src/**', 'requirements.txt', 'railway.json']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install -g @railway/cli
+      - run: railway login --browserless
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+```
+
+Add `RAILWAY_TOKEN` to your GitHub repository secrets.
+
+## 💡 Production Tips
+
+1. **Monitor costs**: Both platforms have usage dashboards
+2. **Optimize cold starts**: Keep your app warm with health checks
+3. **Use environment variables**: Never commit API keys
+4. **Monitor logs**: Set up alerts for errors
+5. **Backup data**: Export your video indices regularly
+
+## 🆘 Support
+
+- **Railway**: [Discord Community](https://discord.gg/railway) & [Documentation](https://docs.railway.app)
+- **Vercel**: [Documentation](https://vercel.com/docs) & [Discord](https://vercel.com/discord)
+- **VidMiner**: Create an issue in your GitHub repository

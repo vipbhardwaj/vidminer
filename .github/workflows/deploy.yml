@@ -1,0 +1,21 @@
+name: Deploy to Railway
+on: 
+  push:
+    branches: [main]
+    paths: ['src/**', 'requirements.txt', 'Dockerfile', 'railway.json']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm install -g @railway/cli
+      - run: railway login --browserless
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - run: railway up
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}

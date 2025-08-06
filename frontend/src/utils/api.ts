@@ -6,7 +6,7 @@ interface ApiResponse<T> {
 }
 
 // Get API base URL from environment or default to localhost
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
 // Generic fetch wrapper with error handling
 async function fetchApi<T>(
@@ -14,10 +14,10 @@ async function fetchApi<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   try {
-    // If endpoint starts with /api, use the backend API
+    // For backend API calls, use the API_BASE_URL
     const url = endpoint.startsWith('/api') 
-      ? `${API_BASE_URL}${endpoint}`
-      : endpoint;
+      ? endpoint  // Next.js API routes
+      : `${API_BASE_URL}${endpoint}`; // External backend API
       
     const response = await fetch(url, {
       ...options,
