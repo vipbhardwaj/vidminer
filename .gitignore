@@ -127,7 +127,7 @@ config.json
 *.m4v
 *.3gp
 *.ogv
-*.ts
+# *.ts  # Commented out - was blocking TypeScript files (.ts video format is rare)
 *.mts
 *.m2ts
 
