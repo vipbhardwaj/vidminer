@@ -11,7 +11,7 @@ interface VideoPlayerProps {
 export default function VideoPlayer({ videoId, videoTitle, onClose }: VideoPlayerProps) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [, setIsPlaying] = useState(false);
   const [transcription, setTranscription] = useState<Array<{time: number, text: string}>>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<{ time: number; text: string }[]>([]);

@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "types": ["node"],
-    "typeRoots": ["./node_modules/@types"],
     "lib": [
       "dom",
       "dom.iterable",
