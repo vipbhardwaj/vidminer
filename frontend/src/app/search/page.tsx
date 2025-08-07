@@ -1,3 +1,5 @@
+'use client';
+
 import Layout from '../../components/Layout';
 import SearchInterface from '../../components/SearchInterface';
 
