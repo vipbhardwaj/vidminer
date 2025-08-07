@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useDebounce } from '@/hooks/useDebounce';
-import { searchTranscripts, SearchResult } from '@/utils/api';
+import { useDebounce } from '../hooks/useDebounce';
+import { searchTranscripts, SearchResult } from '../utils/api';
 
 export default function SearchInterface() {
   const [query, setQuery] = useState('');

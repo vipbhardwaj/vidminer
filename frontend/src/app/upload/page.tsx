@@ -1,5 +1,5 @@
-import Layout from '@/components/Layout';
-import VideoUploader from '@/components/VideoUploader';
+import Layout from '../../components/Layout';
+import VideoUploader from '../../components/VideoUploader';
 
 export default function UploadPage() {
   return (

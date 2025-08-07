@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchDashboardData, type DashboardData } from '@/utils/api';
+import { fetchDashboardData, type DashboardData } from '../utils/api';
 import VideoPlayer from './VideoPlayer';
 
 export default function LibraryInterface() {

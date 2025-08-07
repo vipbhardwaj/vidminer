@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { fetchDashboardData, type DashboardData } from '@/utils/api';
+import { fetchDashboardData, type DashboardData } from '../utils/api';
 
 export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
